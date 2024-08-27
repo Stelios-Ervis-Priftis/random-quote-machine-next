@@ -1,0 +1,47 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	width: 550px;
+	gap: 30px;
+	margin: 50vh auto 0;
+	transform: translateY(-50%);
+}
+
+.loading {
+	display: flex;
+	justify-content: center;
+	font-size: 30px;
+}
+
+.quoteBody {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.quote {
+	font-style: italic;
+}
+
+.author {
+	font-style: italic;
+	font-weight: bold;
+}
+
+.btn {
+	padding: 12px;
+	width: 100%;
+	border: none;
+	border-radius: 5px;
+	text-transform: uppercase;
+	cursor: pointer;
+	font-weight: bold;
+	color: #fff;
+	background-color: #fff;
+	border: 1px solid;
+
+	-webkit-transition: all 0.3s ease 0s;
+	-moz-transition: all 0.3s ease 0s;
+	-o-transition: all 0.3s ease 0s;
+	transition: all 0.3s ease 0s;
+}
