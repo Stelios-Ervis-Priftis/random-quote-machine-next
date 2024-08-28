@@ -2,10 +2,9 @@ import axios from 'axios';
 
 const config = {
 	method: 'get',
-	maxBodyLength: Infinity,
 	url: 'https://api.api-ninjas.com/v1/quotes',
 	headers: {
-		'X-Api-Key': 'ftW4HSzbTpFf/+DI13vgsQ==JZ0HUPHKQsFZsnld',
+		'X-Api-Key': process.env.API_KEY,
 	},
 };
 
