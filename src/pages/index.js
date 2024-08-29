@@ -1,6 +1,6 @@
 import axios from 'axios';
 import randomColor from 'randomcolor';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import styles from '../styles/index.module.css';
 
@@ -20,6 +20,34 @@ export default function App() {
 	const [quote, setQuote] = useState(null);
 	const [color, setColor] = useState(null);
 	const [loading, setLoading] = useState(true);
+	const [count, setCount] = useState(null);
+	const intervalRef = useRef(null);
+
+	const startCountDown = () => {
+		if (intervalRef.current) {
+			clearInterval(intervalRef.current);
+		}
+
+		intervalRef.current = setInterval(() => {
+			setCount((prevTime) => {
+				if (prevTime === 0) {
+					clearInterval(intervalRef.current);
+					intervalRef.current = null;
+
+					return null;
+				} else {
+					return prevTime - 1;
+				}
+			});
+		}, 1000);
+	};
+
+	const getNewQuote = useCallback(() => {
+		setCount(5);
+		fetchNewQuote(setQuote, setLoading);
+		startCountDown();
+		setColor(randomColor());
+	}, []);
 
 	// Handle localStorage and initial quote loading
 	useEffect(() => {
@@ -29,6 +57,7 @@ export default function App() {
 
 			if (storedQuote) {
 				setQuote(JSON.parse(storedQuote));
+				setColor(randomColor());
 				setLoading(false);
 				return;
 			}
@@ -36,7 +65,7 @@ export default function App() {
 			// Fetch a new quote on initial load if not storedQuote
 			getNewQuote();
 		}
-	}, []);
+	}, [getNewQuote]);
 
 	// Handle updating localStorage and generating new color when quote changes
 	useEffect(() => {
@@ -44,13 +73,15 @@ export default function App() {
 			if (typeof window !== 'undefined') {
 				localStorage.setItem('myQuote', JSON.stringify(quote));
 			}
-			setColor(randomColor());
 		}
 	}, [quote]);
 
-	const getNewQuote = () => {
-		fetchNewQuote(setQuote, setLoading);
-	};
+	useEffect(() => {
+		if (count === null && intervalRef) {
+			clearInterval(intervalRef.current);
+			intervalRef.current = null;
+		}
+	}, [count]);
 
 	return (
 		<div className={styles.container}>
@@ -62,7 +93,7 @@ export default function App() {
 				<>
 					<h1 style={{ color }}>Random Quote Machine</h1>
 
-					{quote ? (
+					{!!quote ? (
 						quote.map((q) => (
 							<div className={styles.quoteBody} key={q.author}>
 								<p className={styles.quote} style={{ color }}>
@@ -82,11 +113,14 @@ export default function App() {
 					)}
 
 					<button
-						className={styles.btn}
+						className={`${styles.btn} ${!!count ? styles.disabled : ''}`}
 						style={{ color }}
-						onClick={getNewQuote}
+						onClick={() => {
+							if (count) return;
+							getNewQuote();
+						}}
 					>
-						New Quote
+						{!!count ? `request a new quote in (${count})` : 'new quote'}
 					</button>
 				</>
 			)}
