@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
+    "lib": ["ES6"], // * Avoid having the following error (Cannot find global value ‘Promise) by adding this line
     "paths": {
       "@/*": ["./src/*"]
     }
-  }
+  },
+  "exclude": ["node_modules"]
 }
