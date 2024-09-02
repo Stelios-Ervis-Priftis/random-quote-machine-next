@@ -1,8 +1,9 @@
+import { API_BASE_URL } from '@/constants/index';
 import axios from 'axios';
 
 const config = {
   method: 'get',
-  url: 'https://api.api-ninjas.com/v1/quotes',
+  url: API_BASE_URL,
   headers: {
     'X-Api-Key': process.env.API_NINJAS_KEY,
   },

@@ -1,3 +1,7 @@
+import {
+  COUNTDOWN_DURATION,
+  LOCAL_STORAGE_QUOTES_KEY,
+} from '@/constants/index';
 import axios from 'axios';
 import randomColor from 'randomcolor';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -42,7 +46,7 @@ export default function App() {
   };
 
   const getNewQuote = useCallback(() => {
-    setCount(5);
+    setCount(COUNTDOWN_DURATION);
     fetchNewQuote(setQuote, setLoading);
     startCountDown();
     setColor(randomColor());
@@ -52,7 +56,7 @@ export default function App() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // Make sure this code only runs on the client
-      const storedQuote = localStorage.getItem('myQuote');
+      const storedQuote = localStorage.getItem(LOCAL_STORAGE_QUOTES_KEY);
 
       if (storedQuote) {
         setQuote(JSON.parse(storedQuote));
@@ -70,7 +74,7 @@ export default function App() {
   useEffect(() => {
     if (quote) {
       if (typeof window !== 'undefined') {
-        localStorage.setItem('myQuote', JSON.stringify(quote));
+        localStorage.setItem(LOCAL_STORAGE_QUOTES_KEY, JSON.stringify(quote));
       }
     }
   }, [quote]);
