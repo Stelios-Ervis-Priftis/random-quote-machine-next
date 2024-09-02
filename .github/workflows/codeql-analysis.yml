@@ -20,20 +20,22 @@ jobs:
 
     strategy:
       matrix:
-        language: [ 'javascript', 'typescript' ]
+        language: [ 'typescript' ]
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
+        tools: nodejs
 
     - name: Autobuild
       run: |
         npm install
         npm run build
+
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v3
