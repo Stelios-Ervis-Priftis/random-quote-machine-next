@@ -16,7 +16,12 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.0",
+    "@semantic-release/github": "^10.1.7",
+    "@semantic-release/release-notes-generator": "^14.0.1",
     "eslint": "^8",
-    "eslint-config-next": "14.2.6"
+    "eslint-config-next": "14.2.6",
+    "semantic-release": "^24.1.0"
   }
 }
