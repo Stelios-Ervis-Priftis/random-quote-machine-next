@@ -48,7 +48,6 @@ export default function App() {
   const getNewQuote = useCallback(() => {
     setCount(COUNTDOWN_DURATION);
     fetchNewQuote(setQuote, setLoading);
-    startCountDown();
     setColor(randomColor());
   }, []);
 
@@ -70,7 +69,7 @@ export default function App() {
     }
   }, [getNewQuote]);
 
-  // Handle updating localStorage and generating new color when quote changes
+  // Handle updating localStorage
   useEffect(() => {
     if (quote) {
       if (typeof window !== 'undefined') {
@@ -83,6 +82,10 @@ export default function App() {
     if (count === null && intervalRef) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
+    }
+
+    if (count === COUNTDOWN_DURATION) {
+      startCountDown();
     }
   }, [count]);
 
