@@ -8,8 +8,6 @@
 }
 
 .loading {
-  display: flex;
-  justify-content: center;
   font-size: 30px;
 }
 
@@ -47,4 +45,10 @@
 
 .disabled {
   opacity: 0.5;
+}
+
+.errorMessage {
+  font-size: 14px;
+  text-align: center;
+  color: #f57c00;
 }
