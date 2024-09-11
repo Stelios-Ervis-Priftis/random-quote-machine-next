@@ -1,136 +1,113 @@
-import {
-  COUNTDOWN_DURATION,
-  LOCAL_STORAGE_QUOTES_KEY,
-} from '@/constants/index';
 import axios from 'axios';
 import randomColor from 'randomcolor';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import styles from '../styles/index.module.css';
+import HandleErrorMessages from '@/components/HandleErrorMessages';
+import Loading from '@/components/Loading';
+import { API_ERROR_MESSAGE, LOCAL_STORAGE_QUOTES_KEY } from '@/constants/index';
+import useErrorCountdown from '@/hooks/useErrorCountdown';
 
-const fetchNewQuote = async (setQuote, setLoading) => {
-  try {
-    setLoading(true);
-    const response = await axios.get('/api/proxy');
-    setQuote(response.data);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  } finally {
-    setLoading(false);
-  }
-};
+import styles from '@/styles/index.module.css';
 
 export default function App() {
   const [quote, setQuote] = useState(null);
-  const [color, setColor] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [count, setCount] = useState(null);
-  const intervalRef = useRef(null);
+  const [color, setColor] = useState('black');
+  const [isLoading, setLoading] = useState(true);
+  const {
+    count,
+    isRunning,
+    errorMessage,
+    triggerSuccessCountdown,
+    triggerErrorCountdown,
+  } = useErrorCountdown();
 
-  const startCountDown = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
+  const getNewQuote = async () => {
+    try {
+      setLoading(true);
+      triggerSuccessCountdown();
+      const response = await axios.get('/api/proxy');
+      setQuote(response.data);
+    } catch (error) {
+      console.error('🚀 Error Message:', error);
+      triggerErrorCountdown(API_ERROR_MESSAGE);
+    } finally {
+      setLoading(false);
     }
-
-    intervalRef.current = setInterval(() => {
-      setCount((prevTime) => {
-        if (prevTime === 0) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-
-          return null;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
   };
 
-  const getNewQuote = useCallback(() => {
-    setCount(COUNTDOWN_DURATION);
-    fetchNewQuote(setQuote, setLoading);
-    setColor(randomColor());
-  }, []);
-
-  // Handle localStorage and initial quote loading
+  // Retrieve from localStorage and setQuote if storedQuote, otherwise requests new quote.
   useEffect(() => {
+    setColor(randomColor());
+    // Make sure this code only runs on the client
     if (typeof window !== 'undefined') {
-      // Make sure this code only runs on the client
       const storedQuote = localStorage.getItem(LOCAL_STORAGE_QUOTES_KEY);
 
       if (storedQuote) {
         setQuote(JSON.parse(storedQuote));
-        setColor(randomColor());
-        setLoading(false);
         return;
       }
 
-      // Fetch a new quote on initial load if not storedQuote
       getNewQuote();
     }
-  }, [getNewQuote]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Handle updating localStorage
+  // Set item (quote) to localStorage if quote.
   useEffect(() => {
     if (quote) {
       if (typeof window !== 'undefined') {
         localStorage.setItem(LOCAL_STORAGE_QUOTES_KEY, JSON.stringify(quote));
+        setLoading(false);
       }
     }
   }, [quote]);
 
-  useEffect(() => {
-    if (count === null && intervalRef) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-
-    if (count === COUNTDOWN_DURATION) {
-      startCountDown();
-    }
-  }, [count]);
-
   return (
     <div className={styles.container}>
-      {loading ? (
-        <p className={styles.loading} style={{ color }}>
-          Loading...
-        </p>
-      ) : (
-        <>
-          <h1 style={{ color }}>Random Quote Machine</h1>
-
-          {quote ? (
-            quote.map((q) => (
-              <div className={styles.quoteBody} key={q.author}>
-                <p className={styles.quote} style={{ color }}>
-                  {`"${q.quote}"`}
-                </p>
-                <p className={styles.author} style={{ color }}>
-                  {q.author}
-                </p>
-              </div>
-            ))
-          ) : (
-            <div className={styles.quoteBody}>
+      <div className={styles.quoteBody}>
+        {isLoading && !quote ? (
+          <Loading color={color} />
+        ) : (
+          <>
+            <h1 style={{ color }}>Random Quote Machine</h1>
+            {quote ? (
+              quote.map((q) =>
+                isLoading ? (
+                  <Loading key={q.author} color={color} />
+                ) : (
+                  <div key={q.author} className={styles.quoteBody}>
+                    <p className={styles.quote} style={{ color }}>
+                      {`"${q.quote}"`}
+                    </p>
+                    <p className={styles.author} style={{ color }}>
+                      {q.author}
+                    </p>
+                  </div>
+                )
+              )
+            ) : (
               <p className={styles.quote} style={{ color }}>
                 Request a quote!
               </p>
-            </div>
-          )}
+            )}
 
-          <button
-            type="button"
-            className={`${styles.btn} ${count ? styles.disabled : ''}`}
-            style={{ color }}
-            onClick={() => {
-              if (count) return;
-              getNewQuote();
-            }}
-          >
-            {count ? `request a new quote in (${count})` : 'new quote'}
-          </button>
-        </>
-      )}
+            <button
+              type="button"
+              className={`${styles.btn} ${isRunning ? styles.disabled : ''}`}
+              style={{ color }}
+              onClick={() => {
+                if (isRunning) return;
+                getNewQuote();
+              }}
+            >
+              {isRunning && !errorMessage
+                ? `request a new quote in (${count})`
+                : 'new quote'}
+            </button>
+          </>
+        )}
+        {errorMessage && <HandleErrorMessages message={errorMessage} />}
+      </div>
     </div>
   );
 }

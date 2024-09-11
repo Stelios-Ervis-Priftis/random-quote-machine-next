@@ -11,13 +11,10 @@ const config = {
 
 export default async function handler(req, res) {
   try {
-    // Await the response directly and store it in a variable
     const response = await axios.request(config);
-
-    // Send the response data back to the client
     res.status(200).json(response.data);
   } catch (error) {
-    console.error('Error fetching data:', error); // Log the error details
+    console.error('Error fetching data:', error);
     res.status(500).json({
       error: 'Failed to fetch data',
       details: error.message,
