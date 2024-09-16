@@ -4,7 +4,11 @@ import React, { useEffect, useState } from 'react';
 
 import HandleErrorMessages from '@/components/HandleErrorMessages';
 import Loading from '@/components/Loading';
-import { API_ERROR_MESSAGE, LOCAL_STORAGE_QUOTES_KEY } from '@/constants/index';
+import {
+  API_ERROR_MESSAGE,
+  COLOR_LUMINOSITY,
+  LOCAL_STORAGE_QUOTES_KEY,
+} from '@/constants/index';
 import useErrorCountdown from '@/hooks/useErrorCountdown';
 
 import styles from '@/styles/index.module.css';
@@ -23,6 +27,7 @@ export default function App() {
 
   const getNewQuote = async () => {
     try {
+      setColor(randomColor(COLOR_LUMINOSITY));
       setLoading(true);
       triggerSuccessCountdown();
       const response = await axios.get('/api/proxy');
@@ -37,12 +42,12 @@ export default function App() {
 
   // Retrieve from localStorage and setQuote if storedQuote, otherwise requests new quote.
   useEffect(() => {
-    setColor(randomColor());
     // Make sure this code only runs on the client
     if (typeof window !== 'undefined') {
       const storedQuote = localStorage.getItem(LOCAL_STORAGE_QUOTES_KEY);
 
       if (storedQuote) {
+        setColor(randomColor(COLOR_LUMINOSITY));
         setQuote(JSON.parse(storedQuote));
         return;
       }
