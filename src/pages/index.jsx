@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 import HandleErrorMessages from '@/components/HandleErrorMessages';
 import Loading from '@/components/Loading';
+import QuoteDisplay from '@/components/QuoteDisplay';
 import {
   API_ERROR_MESSAGE,
   COLOR_LUMINOSITY,
@@ -78,6 +79,11 @@ export default function App() {
         ) : (
           <>
             <h1 style={{ color }}>Random Quote Machine</h1>
+            <QuoteDisplay
+              quoteBody={quoteBody}
+              isLoading={isLoading}
+              color={color}
+            />
             <button
               type="button"
               className={`${styles.btn} ${isRunning ? styles.disabled : ''}`}
