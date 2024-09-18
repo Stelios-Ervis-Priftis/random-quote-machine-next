@@ -14,7 +14,7 @@ import useErrorCountdown from '@/hooks/useErrorCountdown';
 import styles from '@/styles/index.module.css';
 
 export default function App() {
-  const [quote, setQuote] = useState(null);
+  const [quoteBody, setQuoteBody] = useState(null);
   const [color, setColor] = useState('black');
   const [isLoading, setLoading] = useState(true);
   const {
@@ -31,7 +31,7 @@ export default function App() {
       setLoading(true);
       triggerSuccessCountdown();
       const response = await axios.get('/api/proxy');
-      setQuote(response.data);
+      setQuoteBody(response.data[0]);
     } catch (error) {
       console.error('🚀 Error Message:', error);
       triggerErrorCountdown(API_ERROR_MESSAGE);
@@ -40,7 +40,7 @@ export default function App() {
     }
   };
 
-  // Retrieve from localStorage and setQuote if storedQuote, otherwise requests new quote.
+  // Retrieve from localStorage and setQuoteBody if storedQuoteBody, otherwise requests new quoteBody.
   useEffect(() => {
     // Make sure this code only runs on the client
     if (typeof window !== 'undefined') {
@@ -48,7 +48,7 @@ export default function App() {
 
       if (storedQuote) {
         setColor(randomColor(COLOR_LUMINOSITY));
-        setQuote(JSON.parse(storedQuote));
+        setQuoteBody(JSON.parse(storedQuote));
         return;
       }
 
@@ -57,45 +57,27 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Set item (quote) to localStorage if quote.
+  // Set item (quoteBody) to localStorage if quoteBody.
   useEffect(() => {
-    if (quote) {
+    if (quoteBody) {
       if (typeof window !== 'undefined') {
-        localStorage.setItem(LOCAL_STORAGE_QUOTES_KEY, JSON.stringify(quote));
+        localStorage.setItem(
+          LOCAL_STORAGE_QUOTES_KEY,
+          JSON.stringify(quoteBody)
+        );
         setLoading(false);
       }
     }
-  }, [quote]);
+  }, [quoteBody]);
 
   return (
     <div className={styles.container}>
       <div className={styles.quoteBody}>
-        {isLoading && !quote ? (
+        {isLoading && !quoteBody ? (
           <Loading color={color} />
         ) : (
           <>
             <h1 style={{ color }}>Random Quote Machine</h1>
-            {quote ? (
-              quote.map((q) =>
-                isLoading ? (
-                  <Loading key={q.author} color={color} />
-                ) : (
-                  <div key={q.author} className={styles.quoteBody}>
-                    <p className={styles.quote} style={{ color }}>
-                      {`"${q.quote}"`}
-                    </p>
-                    <p className={styles.author} style={{ color }}>
-                      {q.author}
-                    </p>
-                  </div>
-                )
-              )
-            ) : (
-              <p className={styles.quote} style={{ color }}>
-                Request a quote!
-              </p>
-            )}
-
             <button
               type="button"
               className={`${styles.btn} ${isRunning ? styles.disabled : ''}`}
