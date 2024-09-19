@@ -9,7 +9,7 @@ import {
 export default function useErrorCountdown() {
   const delay = 1000;
   const [isRunning, setRunning] = useState(false);
-  const [count, setCount] = useState(null);
+  const [count, setCount] = useState(0);
   const [errorMessage, setErrorMessage] = useState(null);
 
   useInterval(
