@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 import HandleErrorMessages from '@/components/HandleErrorMessages';
 import Loading from '@/components/Loading';
+import NewQuoteButton from '@/components/NewQuoteButton';
 import QuoteDisplay from '@/components/QuoteDisplay';
 import {
   API_ERROR_MESSAGE,
@@ -84,19 +85,13 @@ export default function App() {
               isLoading={isLoading}
               color={color}
             />
-            <button
-              type="button"
-              className={`${styles.btn} ${isRunning ? styles.disabled : ''}`}
-              style={{ color }}
-              onClick={() => {
-                if (isRunning) return;
-                getNewQuote();
-              }}
-            >
-              {isRunning && !errorMessage
-                ? `request a new quote in (${count})`
-                : 'new quote'}
-            </button>
+            <NewQuoteButton
+              color={color}
+              count={count}
+              isRunning={isRunning}
+              errorMessage={!!errorMessage}
+              getNewQuote={getNewQuote}
+            />
           </>
         )}
         {errorMessage && <HandleErrorMessages message={errorMessage} />}
