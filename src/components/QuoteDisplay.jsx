@@ -5,39 +5,30 @@ import Loading from '@/components/Loading';
 
 import styles from '@/styles/index.module.css';
 
-export default function QuoteDisplay({ quoteBody, isLoading, color }) {
-  if (isLoading) {
-    return <Loading color={color} />;
+export default function QuoteDisplay({ quoteData, isFetching }) {
+  if (isFetching) {
+    return <Loading />;
   }
 
-  if (quoteBody) {
-    const { quote, author } = quoteBody;
+  if (quoteData) {
+    const { quote, author } = quoteData;
 
     return (
       <>
-        <p className={styles.quote} style={{ color }}>
-          {`"${quote}"`}
-        </p>
-        <p className={styles.author} style={{ color }}>
-          {author}
-        </p>
+        <p className={styles.quote}>{`"${quote}"`}</p>
+        <p className={styles.author}>{author}</p>
       </>
     );
   }
 
-  return (
-    <p className={styles.quote} style={{ color }}>
-      Request a quote!
-    </p>
-  );
+  return <p className={styles.quote}>Request a quote!</p>;
 }
 
 QuoteDisplay.propTypes = {
-  quoteBody: PropTypes.shape({
+  quoteData: PropTypes.shape({
     author: string,
     category: string,
     quote: string,
   }).isRequired,
-  isLoading: PropTypes.bool.isRequired,
-  color: PropTypes.string.isRequired,
+  isFetching: PropTypes.bool.isRequired,
 };
