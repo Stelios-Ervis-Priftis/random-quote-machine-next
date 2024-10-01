@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useInterval } from 'react-use';
 
-import {
-  COUNTDOWN_DURATION,
-  ERROR_COUNTDOWN_DURATION,
-} from '@/constants/index';
+import { COUNTDOWN_DURATION } from '@/constants/index';
 
-export default function useErrorCountdown() {
+export default function useErrorCountdown(isFetching) {
   const delay = 1000;
+  const [count, setCount] = useState(COUNTDOWN_DURATION);
   const [isRunning, setRunning] = useState(false);
-  const [count, setCount] = useState(0);
-  const [errorMessage, setErrorMessage] = useState(null);
 
   useInterval(
     () => {
@@ -20,28 +16,20 @@ export default function useErrorCountdown() {
   );
 
   useEffect(() => {
+    if (isFetching) {
+      setCount(COUNTDOWN_DURATION);
+      setRunning(true);
+    }
+  }, [isFetching]);
+
+  useEffect(() => {
     if (count === 0) {
-      setErrorMessage(null);
       setRunning(false);
     }
   }, [count]);
 
-  const triggerSuccessCountdown = () => {
-    setCount(COUNTDOWN_DURATION);
-    setRunning(true);
-  };
-
-  const triggerErrorCountdown = (message) => {
-    setErrorMessage(message);
-    setCount(ERROR_COUNTDOWN_DURATION);
-    setRunning(true);
-  };
-
   return {
     count,
     isRunning,
-    errorMessage,
-    triggerSuccessCountdown,
-    triggerErrorCountdown,
   };
 }
