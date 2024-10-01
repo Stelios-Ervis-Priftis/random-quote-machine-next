@@ -3,36 +3,25 @@ import React from 'react';
 
 import styles from '@/styles/index.module.css';
 
-export default function NewQuoteButton({
-  color,
-  count,
-  isRunning,
-  errorMessage,
-  getNewQuote,
-}) {
+export default function NewQuoteButton({ count, isRunning, fetchQuote }) {
   const handleClick = () => {
     if (isRunning) return;
-    getNewQuote();
+    fetchQuote();
   };
 
   return (
     <button
       type="button"
       className={`${styles.btn} ${isRunning ? styles.disabled : ''}`}
-      style={{ color }}
       onClick={handleClick}
     >
-      {isRunning && !errorMessage
-        ? `request a new quote in (${count !== null ? count : ''})`
-        : 'new quote'}
+      request a new quote {isRunning && `in (${count})`}
     </button>
   );
 }
 
 NewQuoteButton.propTypes = {
-  color: PropTypes.string.isRequired,
   count: PropTypes.number.isRequired,
   isRunning: PropTypes.bool.isRequired,
-  errorMessage: PropTypes.bool.isRequired,
-  getNewQuote: PropTypes.func.isRequired,
+  fetchQuote: PropTypes.func.isRequired,
 };
