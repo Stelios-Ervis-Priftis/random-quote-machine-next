@@ -1,5 +1,5 @@
 export const API_BASE_URL = 'https://api.api-ninjas.com/v1/quotes';
-export const LOCAL_STORAGE_QUOTES_KEY = 'quote';
+export const QUERY_QUOTE_KEY = 'quote';
 export const COUNTDOWN_DURATION = 5;
 export const INITIAL_COLOR = '#000000';
 export const COLOR_LUMINOSITY = { luminosity: 'dark' };
