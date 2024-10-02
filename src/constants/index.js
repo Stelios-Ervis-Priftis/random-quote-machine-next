@@ -4,9 +4,8 @@ export const COUNTDOWN_DURATION = 5;
 export const INITIAL_COLOR = '#000000';
 export const COLOR_LUMINOSITY = { luminosity: 'dark' };
 export const initialQuoteData = {
-  quote:
-    "Request a quote! Just click the button below and you'll get a random quote.",
-  author: 'Random Quote Generator',
+  quote: 'Click the button below, and a random quote will find its way to you.',
+  author: 'Quote Generator',
   category: 'Random',
 };
 
