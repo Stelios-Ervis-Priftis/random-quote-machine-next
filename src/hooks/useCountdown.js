@@ -48,7 +48,7 @@ const stopCountdown = (setRunning) => {
  * @property {number} count - The current count
  * @property {boolean} isRunning - Is the countdown running?
  */
-const useErrorCountdown = (isFetching) => {
+const useCountdown = (isFetching) => {
   const { count, setCount, isRunning, setRunning } = useInitializeCountdown();
   const delay = COUNTDOWN_DELAY;
 
@@ -77,4 +77,4 @@ const useErrorCountdown = (isFetching) => {
   };
 };
 
-export default useErrorCountdown;
+export default useCountdown;

@@ -10,7 +10,7 @@ import {
   COLOR_LUMINOSITY,
   INITIAL_COLOR,
 } from '@/constants/index';
-import useErrorCountdown from '@/hooks/useErrorCountdown';
+import useCountdown from '@/hooks/useCountdown';
 import useQuote from '@/hooks/useQuote';
 
 import styles from '@/styles/index.module.css';
@@ -18,7 +18,7 @@ import styles from '@/styles/index.module.css';
 export default function App() {
   const { data: quote, isFetching, isError, refetch } = useQuote();
   const [color, setColor] = useState(INITIAL_COLOR);
-  const { count, isRunning } = useErrorCountdown(isFetching);
+  const { count, isRunning } = useCountdown(isFetching);
 
   useEffect(() => {
     setColor(randomColor(COLOR_LUMINOSITY));
