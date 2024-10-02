@@ -3,7 +3,7 @@ import { useInterval } from 'react-use';
 
 import { COUNTDOWN_DURATION } from '@/constants/index';
 
-export default function useErrorCountdown(isFetching) {
+const useErrorCountdown = (isFetching) => {
   const delay = 1000;
   const [count, setCount] = useState(COUNTDOWN_DURATION);
   const [isRunning, setRunning] = useState(false);
@@ -32,4 +32,6 @@ export default function useErrorCountdown(isFetching) {
     count,
     isRunning,
   };
-}
+};
+
+export default useErrorCountdown;

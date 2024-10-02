@@ -9,7 +9,7 @@ const config = {
   },
 };
 
-export default async function handler(req, res) {
+const handler = async (req, res) => {
   try {
     const response = await axios.request(config);
     res.status(200).json(response.data[0]);
@@ -20,4 +20,6 @@ export default async function handler(req, res) {
       details: error.message,
     });
   }
-}
+};
+
+export default handler;
