@@ -7,6 +7,7 @@ export const API_ERROR_MESSAGE =
 export const QUERY_QUOTE_KEY = 'quote';
 
 // Constants related to countdown
+export const COUNTDOWN_DELAY = 1000;
 export const COUNTDOWN_DURATION = 5;
 
 // Constants related to color
