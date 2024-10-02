@@ -6,6 +6,7 @@ import NewQuoteButton from '@/components/NewQuoteButton';
 import QuoteDisplay from '@/components/QuoteDisplay';
 import {
   API_ERROR_MESSAGE,
+  APP_NAME_TITLE,
   COLOR_LUMINOSITY,
   INITIAL_COLOR,
 } from '@/constants/index';
@@ -26,7 +27,7 @@ export default function App() {
   return (
     <div className={styles.container}>
       <div className={styles.quoteContainer} style={{ color }}>
-        <h1>Quote Generator</h1>
+        <h1>{APP_NAME_TITLE}</h1>
         <QuoteDisplay quoteData={quote} isFetching={isFetching} color={color} />
         <NewQuoteButton
           count={count}

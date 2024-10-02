@@ -3,6 +3,7 @@ export const QUERY_QUOTE_KEY = 'quote';
 export const COUNTDOWN_DURATION = 5;
 export const INITIAL_COLOR = '#000000';
 export const COLOR_LUMINOSITY = { luminosity: 'dark' };
+export const APP_NAME_TITLE = 'Random Quote Generator';
 export const initialQuoteData = {
   quote: 'Click the button below, and a random quote will find its way to you.',
   author: 'Quote Generator',
