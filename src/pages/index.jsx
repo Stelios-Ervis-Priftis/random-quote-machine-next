@@ -32,7 +32,7 @@ export default function App() {
         <FetchQuoteButton
           count={count}
           isRunning={isRunning}
-          fetchQuote={refetch}
+          fetchRandomQuote={refetch}
         />
       </div>
       {isError && isRunning && <ErrorMessages message={API_ERROR_MESSAGE} />}

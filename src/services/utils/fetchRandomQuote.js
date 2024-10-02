@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const fetchQuote = async () => {
+const fetchRandomQuote = async () => {
   try {
     const { data } = await axios.get('/api/proxy');
     return data;
@@ -10,4 +10,4 @@ const fetchQuote = async () => {
   }
 };
 
-export default fetchQuote;
+export default fetchRandomQuote;

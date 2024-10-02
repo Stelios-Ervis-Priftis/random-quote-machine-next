@@ -3,10 +3,14 @@ import React from 'react';
 
 import styles from '@/styles/index.module.css';
 
-export default function FetchQuoteButton({ count, isRunning, fetchQuote }) {
+export default function FetchQuoteButton({
+  count,
+  isRunning,
+  fetchRandomQuote,
+}) {
   const handleClick = () => {
     if (isRunning) return;
-    fetchQuote();
+    fetchRandomQuote();
   };
 
   return (
@@ -23,5 +27,5 @@ export default function FetchQuoteButton({ count, isRunning, fetchQuote }) {
 FetchQuoteButton.propTypes = {
   count: PropTypes.number.isRequired,
   isRunning: PropTypes.bool.isRequired,
-  fetchQuote: PropTypes.func.isRequired,
+  fetchRandomQuote: PropTypes.func.isRequired,
 };
