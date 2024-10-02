@@ -1,8 +1,8 @@
 import randomColor from 'randomcolor';
 import React, { useEffect, useState } from 'react';
 
-import HandleErrorMessages from '@/components/HandleErrorMessages';
-import NewQuoteButton from '@/components/NewQuoteButton';
+import ErrorMessages from '@/components/ErrorMessages';
+import FetchQuoteButton from '@/components/FetchQuoteButton';
 import QuoteDisplay from '@/components/QuoteDisplay';
 import {
   API_ERROR_MESSAGE,
@@ -29,15 +29,13 @@ export default function App() {
       <div className={styles.quoteContainer} style={{ color }}>
         <h1>{APP_NAME_TITLE}</h1>
         <QuoteDisplay quoteData={quote} isFetching={isFetching} color={color} />
-        <NewQuoteButton
+        <FetchQuoteButton
           count={count}
           isRunning={isRunning}
           fetchQuote={refetch}
         />
       </div>
-      {isError && isRunning && (
-        <HandleErrorMessages message={API_ERROR_MESSAGE} />
-      )}
+      {isError && isRunning && <ErrorMessages message={API_ERROR_MESSAGE} />}
     </div>
   );
 }

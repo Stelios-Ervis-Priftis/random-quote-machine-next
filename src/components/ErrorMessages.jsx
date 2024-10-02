@@ -3,10 +3,10 @@ import { React } from 'react';
 
 import styles from '@/styles/index.module.css';
 
-export default function HandleErrorMessages({ message }) {
+export default function ErrorMessages({ message }) {
   return <p className={styles.errorMessage}>{message}</p>;
 }
 
-HandleErrorMessages.propTypes = {
+ErrorMessages.propTypes = {
   message: PropTypes.string.isRequired,
 };

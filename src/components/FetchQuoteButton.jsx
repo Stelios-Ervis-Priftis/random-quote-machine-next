@@ -3,7 +3,7 @@ import React from 'react';
 
 import styles from '@/styles/index.module.css';
 
-export default function NewQuoteButton({ count, isRunning, fetchQuote }) {
+export default function FetchQuoteButton({ count, isRunning, fetchQuote }) {
   const handleClick = () => {
     if (isRunning) return;
     fetchQuote();
@@ -20,7 +20,7 @@ export default function NewQuoteButton({ count, isRunning, fetchQuote }) {
   );
 }
 
-NewQuoteButton.propTypes = {
+FetchQuoteButton.propTypes = {
   count: PropTypes.number.isRequired,
   isRunning: PropTypes.bool.isRequired,
   fetchQuote: PropTypes.func.isRequired,
