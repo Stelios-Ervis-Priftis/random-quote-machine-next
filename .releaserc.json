@@ -26,6 +26,10 @@
             "release": false
           },
           {
+            "type": "refactor-patch",
+            "release": "patch"
+          },
+          {
             "type": "perf",
             "release": "patch"
           },
