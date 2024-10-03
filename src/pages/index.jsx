@@ -1,118 +1,41 @@
-import axios from 'axios';
 import randomColor from 'randomcolor';
 import React, { useEffect, useState } from 'react';
 
-import HandleErrorMessages from '@/components/HandleErrorMessages';
-import Loading from '@/components/Loading';
+import ErrorMessages from '@/components/ErrorMessages';
+import FetchQuoteButton from '@/components/FetchQuoteButton';
+import QuoteDisplay from '@/components/QuoteDisplay';
 import {
   API_ERROR_MESSAGE,
+  APP_NAME_TITLE,
   COLOR_LUMINOSITY,
-  LOCAL_STORAGE_QUOTES_KEY,
+  INITIAL_COLOR,
 } from '@/constants/index';
-import useErrorCountdown from '@/hooks/useErrorCountdown';
+import useCountdown from '@/hooks/useCountdown';
+import useQuote from '@/hooks/useQuote';
 
 import styles from '@/styles/index.module.css';
 
 export default function App() {
-  const [quote, setQuote] = useState(null);
-  const [color, setColor] = useState('black');
-  const [isLoading, setLoading] = useState(true);
-  const {
-    count,
-    isRunning,
-    errorMessage,
-    triggerSuccessCountdown,
-    triggerErrorCountdown,
-  } = useErrorCountdown();
+  const { data: quote, isFetching, isError, refetch } = useQuote();
+  const [color, setColor] = useState(INITIAL_COLOR);
+  const { count, isRunning } = useCountdown(isFetching);
 
-  const getNewQuote = async () => {
-    try {
-      setColor(randomColor(COLOR_LUMINOSITY));
-      setLoading(true);
-      triggerSuccessCountdown();
-      const response = await axios.get('/api/proxy');
-      setQuote(response.data);
-    } catch (error) {
-      console.error('🚀 Error Message:', error);
-      triggerErrorCountdown(API_ERROR_MESSAGE);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Retrieve from localStorage and setQuote if storedQuote, otherwise requests new quote.
   useEffect(() => {
-    // Make sure this code only runs on the client
-    if (typeof window !== 'undefined') {
-      const storedQuote = localStorage.getItem(LOCAL_STORAGE_QUOTES_KEY);
-
-      if (storedQuote) {
-        setColor(randomColor(COLOR_LUMINOSITY));
-        setQuote(JSON.parse(storedQuote));
-        return;
-      }
-
-      getNewQuote();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Set item (quote) to localStorage if quote.
-  useEffect(() => {
-    if (quote) {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(LOCAL_STORAGE_QUOTES_KEY, JSON.stringify(quote));
-        setLoading(false);
-      }
-    }
+    setColor(randomColor(COLOR_LUMINOSITY));
   }, [quote]);
 
   return (
     <div className={styles.container}>
-      <div className={styles.quoteBody}>
-        {isLoading && !quote ? (
-          <Loading color={color} />
-        ) : (
-          <>
-            <h1 style={{ color }}>Random Quote Machine</h1>
-            {quote ? (
-              quote.map((q) =>
-                isLoading ? (
-                  <Loading key={q.author} color={color} />
-                ) : (
-                  <div key={q.author} className={styles.quoteBody}>
-                    <p className={styles.quote} style={{ color }}>
-                      {`"${q.quote}"`}
-                    </p>
-                    <p className={styles.author} style={{ color }}>
-                      {q.author}
-                    </p>
-                  </div>
-                )
-              )
-            ) : (
-              <p className={styles.quote} style={{ color }}>
-                Request a quote!
-              </p>
-            )}
-
-            <button
-              type="button"
-              className={`${styles.btn} ${isRunning ? styles.disabled : ''}`}
-              style={{ color }}
-              onClick={() => {
-                if (isRunning) return;
-                getNewQuote();
-              }}
-            >
-              {isRunning && !errorMessage
-                ? `request a new quote in (${count})`
-                : 'new quote'}
-            </button>
-          </>
-        )}
-        {errorMessage && <HandleErrorMessages message={errorMessage} />}
+      <div className={styles.quoteContainer} style={{ color }}>
+        <h1>{APP_NAME_TITLE}</h1>
+        <QuoteDisplay quoteData={quote} isFetching={isFetching} color={color} />
+        <FetchQuoteButton
+          count={count}
+          isRunning={isRunning}
+          fetchRandomQuote={refetch}
+        />
       </div>
+      {isError && isRunning && <ErrorMessages message={API_ERROR_MESSAGE} />}
     </div>
   );
 }
